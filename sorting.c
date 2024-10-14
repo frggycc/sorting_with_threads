@@ -1,3 +1,12 @@
+/*******************************
+* CPSC351: Group Assignment #2
+* Members: 
+* 	Charlie Cardenas
+* 	Chaitanya Talluri
+* 	Ansh Tomar
+* 	Hunter Tran
+********************************/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
@@ -27,7 +36,7 @@ int compare(const void *a, const void *b) {
     return (va > vb) - (va < vb);
 }
 
-// Thread function for sorting each half of the array
+// Thread function for sorting each half of the array using qsort
 void *sortingThread(void *args) {
     SortingThreadParameters *oneSide = (SortingThreadParameters *)args;
     int *start = oneSide->subArray;
@@ -80,34 +89,35 @@ void *mergingThread(void *args) {
 
 int main() {
     // Printing out the original array
-    printf("Original array: ");
+    printf("Original Array: { ");
     for (int i = 0; i < ARRAY_SIZE; i++) {
         printf("%d ", list[i]);
     }
-    printf("\n");
+    printf("}\n");
 
-    // Define thread variables
+    // Define thread snd struct variables
     pthread_t thread1, thread2, merge_thread;
     SortingThreadParameters subLeft, subRight;
     MergingThreadParameters mergeLR;
 
     int mid = ARRAY_SIZE / 2;
 
-    // Split array into two parts
+    // Left side starts at array[0]; size = half of array size
     subLeft.subArray = &list;
     subLeft.size = mid;
-
+    
+    // Right side starts at array[mid]; size = array size - mid
     subRight.subArray = &(list[mid]);
     subRight.size = ARRAY_SIZE - mid;
 
     // Test running through sub array 1
-    printf("Left side: ");
+    printf("Left Side: ");
     for (int i = 0; i < subLeft.size; i++) {
         printf("%d ", subLeft.subArray[i]);
     }
     printf("\n");
 
-    printf("Right side: ");
+    printf("Right Side: ");
     for (int i = 0; i < subRight.size; i++) {
         printf("%d ", subRight.subArray[i]);
     }
@@ -137,7 +147,7 @@ int main() {
     mergeLR.left = subLeft;
     mergeLR.right = subRight;
 
-    // Merge left and righter together
+    // Merge left and right together
     pthread_create(&merge_thread, NULL, mergingThread, (void *)&mergeLR);
 
     // Wait for the merge thread to complete
@@ -145,11 +155,11 @@ int main() {
 
     // Print the fully sorted array
     printf("\n");
-    printf("Fully sorted array: ");
+    printf("Fully Sorted Array: { ");
     for (int i = 0; i < ARRAY_SIZE; i++) {
         printf("%d ", sorted[i]);
     }
-    printf("\n");
+    printf("}\n");
 
     return 0;
 }
