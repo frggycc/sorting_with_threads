@@ -103,7 +103,7 @@ int main() {
     int mid = ARRAY_SIZE / 2;
 
     // Left side starts at array[0]; size = half of array size
-    subLeft.subArray = &list;
+    subLeft.subArray = list;
     subLeft.size = mid;
     
     // Right side starts at array[mid]; size = array size - mid
